@@ -6,15 +6,15 @@
         <h3 class="title">Login Form</h3>
       </div>
       <!-- 登录表单的其他部分代码保持不变 -->
-      <el-form-item prop="username">
+      <el-form-item prop="account">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
         <el-input
-          ref="username"
-          v-model="loginForm.username"
+          ref="account"
+          v-model="loginForm.account"
           placeholder="请输入账号"
-          name="username"
+          name="account"
           type="text"
           tabindex="1"
           autocomplete="on"
@@ -69,8 +69,8 @@
       <div class="title-container">
         <h3 class="title">Register Form</h3>
       </div>
-      <el-form-item prop="username">
-        <el-input v-model="registerForm.username" placeholder="请输入账号" />
+      <el-form-item prop="account">
+        <el-input v-model="registerForm.account" placeholder="请输入账号" />
       </el-form-item>
       <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
         <el-form-item prop="password">
@@ -120,6 +120,26 @@
           </span>
         </el-form-item>
       </el-tooltip>
+      <!-- Sex -->
+      <el-form-item prop="sex">
+        <el-select v-model="registerForm.sex" placeholder="请选择性别">
+          <el-option label="男" value="male" />
+          <el-option label="女" value="female" />
+        </el-select>
+      </el-form-item>
+
+      <!-- Phone -->
+      <el-form-item prop="user_phone">
+        <el-input v-model="registerForm.user_phone" placeholder="请输入手机号" />
+      </el-form-item>
+
+      <!-- User Type -->
+      <el-form-item prop="user_type">
+        <el-select v-model="registerForm.user_type" placeholder="请选择用户类型">
+          <el-option label="普通用户" value="normal" />
+          <el-option label="管理员" value="admin" />
+        </el-select>
+      </el-form-item>
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleRegister">Register</el-button>
       <el-button type="text" @click="toggleForm">Already have an account? Log in here</el-button>
     </el-form>
@@ -156,21 +176,43 @@ export default {
         callback()
       }
     }
+    const validatePhone = (rule, value, callback) => {
+      const phonePattern = /^[1][3-9]\d{9}$/
+      if (!value) {
+        callback(new Error('请输入手机号'))
+      } else if (!phonePattern.test(value)) {
+        callback(new Error('请输入正确的手机号'))
+      } else {
+        callback()
+      }
+    }
+
     return {
       // 注册部分
       isLogin: true, // 控制登陆和注册页面的显示
       registerForm: {
-        username: '',
+        account: '',
         password: '',
-        confirmPassword: ''
+        confirmPassword: '',
+        sex: '',
+        user_phone: '',
+        user_type: ''
       },
       loginForm: {
-        username: 'admin',
+        account: 'admin',
         password: '111111'
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        account: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+      },
+      registerRules: {
+        account: [{ required: true, message: '请输入账号', trigger: 'blur' }],
+        password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+        confirmPassword: [{ required: true, message: '请确认密码', trigger: 'blur' }],
+        sex: [{ required: true, message: '请选择性别', trigger: 'change' }],
+        user_phone: [{ required: true, message: '请输入手机号', trigger: 'blur', validator: validatePhone }],
+        user_type: [{ required: true, message: '请选择用户类型', trigger: 'change' }]
       },
       passwordType: 'password',
       capsTooltip: false,
@@ -196,8 +238,8 @@ export default {
     // window.addEventListener('storage', this.afterQRScan)
   },
   mounted() {
-    if (this.loginForm.username === '') {
-      this.$refs.username.focus()
+    if (this.loginForm.account === '') {
+      this.$refs.account.focus()
     } else if (this.loginForm.password === '') {
       this.$refs.password.focus()
     }
@@ -236,7 +278,7 @@ export default {
         if (valid) {
           // 假设注册成功，给用户设置权限为 editor
           const user = {
-            username: this.registerForm.username,
+            account: this.registerForm.account,
             password: this.registerForm.password,
             role: 'editor'
           }

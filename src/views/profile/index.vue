@@ -10,6 +10,10 @@
         <el-col :span="18" :xs="24">
           <el-card>
             <el-tabs v-model="activeTab">
+              <!-- 新增的“修改密码”选项卡 -->
+              <el-tab-pane label="修改密码" name="password">
+                <change-password />
+              </el-tab-pane>
               <el-tab-pane label="Activity" name="activity">
                 <activity />
               </el-tab-pane>
@@ -34,10 +38,11 @@ import UserCard from './components/UserCard'
 import Activity from './components/Activity'
 import Timeline from './components/Timeline'
 import Account from './components/Account'
+import ChangePassword from './components/ChangePassword' // 引入ChangePassword组件
 
 export default {
   name: 'Profile',
-  components: { UserCard, Activity, Timeline, Account },
+  components: { UserCard, Activity, Timeline, Account, ChangePassword },
   data() {
     return {
       user: {},

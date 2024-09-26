@@ -2,7 +2,7 @@
  * @Author: lsl
  * @Date: 2024-09-23 19:23:04
  * @LastEditors: lsl
- * @LastEditTime: 2024-09-24 22:36:56
+ * @LastEditTime: 2024-09-26 16:20:30
  * @Description: 请填写简介
 -->
 <template>
@@ -12,7 +12,7 @@
       <img :src="product.image" :alt="product.name">
     </div>
     <div style="position:relative;">
-      <pan-thumb :image="product.avatar" class="panThumb" />
+      <!-- <pan-thumb :image="product.avatar" class="panThumb" /> -->
       <!-- 商品名称 -->
       <mallki class-name="mallki-text" :text="product.name" />
       <!-- 商品描述 -->
@@ -54,11 +54,12 @@
 </template>
 
 <script>
-import PanThumb from '@/components/PanThumb'
+// import PanThumb from '@/components/PanThumb'
 import Mallki from '@/components/TextHoverEffect/Mallki'
 
 export default {
-  components: { PanThumb, Mallki },
+  // PanThumb,
+  components: { Mallki },
   props: {
     product: {
       type: Object,
