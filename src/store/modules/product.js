@@ -7,135 +7,135 @@
  */
 // store/modules/product.js
 // 以下两个const是不连接后端时用的，若连接后端要用后面两个
+
+// {
+//   product_id: 1,
+//   name: '商品1',
+//   image: 'https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png',
+//   avatar: 'https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png',
+//   description: '一款按了就会爆炸的按钮。',
+//   category: '技术产品',
+//   price: 1200,
+//   jhprice: 1,
+//   pfprice: 2,
+//   quantity: 100,
+//   feature1: 'Vue',
+//   feature1Percentage: 70,
+//   feature2: 'JavaScript',
+//   feature2Percentage: 18,
+//   feature3: 'CSS',
+//   feature3Percentage: 12,
+//   feature4: 'ESLint',
+//   feature4Percentage: 100
+// },
+// {
+//   product_id: 2,
+//   name: '商品2',
+//   image: 'https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png',
+//   avatar: 'https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png',
+//   description: '一款一样会爆炸的按钮。',
+//   category: '技术产品',
+//   price: 1500,
+//   jhprice: 1,
+//   pfprice: 2,
+//   quantity: 100,
+//   feature1: 'React',
+//   feature1Percentage: 80,
+//   feature2: 'TypeScript',
+//   feature2Percentage: 40,
+//   feature3: 'SASS',
+//   feature3Percentage: 50,
+//   feature4: 'Prettier',
+//   feature4Percentage: 90
+// },
+// {
+//   product_id: 3,
+//   name: '商品3',
+//   image: 'https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png',
+//   avatar: 'https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png',
+//   description: '一款不按也会爆炸的按钮。',
+//   category: '技术产品',
+//   price: 1500,
+//   quantity: 100,
+//   jhprice: 1,
+//   pfprice: 2,
+//   feature1: 'Vue',
+//   feature1Percentage: 70,
+//   feature2: 'JavaScript',
+//   feature2Percentage: 18,
+//   feature3: 'CSS',
+//   feature3Percentage: 12,
+//   feature4: 'ESLint',
+//   feature4Percentage: 100
+// },
+// {
+//   product_id: 4,
+//   name: '商品4',
+//   image: 'https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png',
+//   avatar: 'https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png',
+//   description: '爆炸的按钮。',
+//   category: '技术产品',
+//   price: 1500,
+//   jhprice: 1,
+//   pfprice: 2,
+//   quantity: 100,
+//   feature1: 'React',
+//   feature1Percentage: 80,
+//   feature2: 'TypeScript',
+//   feature2Percentage: 40,
+//   feature3: 'SASS',
+//   feature3Percentage: 50,
+//   feature4: 'Prettier',
+//   feature4Percentage: 90
+// },
+// {
+//   product_id: 5,
+//   name: '商品5',
+//   image: 'https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png',
+//   avatar: 'https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png',
+//   description: '一款打了折的爆炸按钮。',
+//   category: '技术产品',
+//   price: 500,
+//   jhprice: 1,
+//   pfprice: 2,
+//   quantity: 100,
+//   feature1: 'Vue',
+//   feature1Percentage: 70,
+//   feature2: 'JavaScript',
+//   feature2Percentage: 18,
+//   feature3: 'CSS',
+//   feature3Percentage: 12,
+//   feature4: 'ESLint',
+//   feature4Percentage: 100
+// },
+// {
+//   product_id: 6,
+//   name: '商品6',
+//   image: 'https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png',
+//   avatar: 'https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png',
+//   description: '难以捉摸的爆炸按钮。',
+//   category: '技术产品',
+//   price: 1500,
+//   jhprice: 1,
+//   pfprice: 2,
+//   quantity: 100,
+//   feature1: 'React',
+//   feature1Percentage: 80,
+//   feature2: 'TypeScript',
+//   feature2Percentage: 40,
+//   feature3: 'SASS',
+//   feature3Percentage: 50,
+//   feature4: 'Prettier',
+//   feature4Percentage: 90
+// }
 import axios from 'axios'
 
 const state = {
-  products: [
-    {
-      product_id: 1,
-      name: '商品1',
-      image: 'https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png',
-      avatar: 'https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png',
-      description: '一款按了就会爆炸的按钮。',
-      category: '技术产品',
-      price: 1200,
-      jhprice: 1,
-      pfprice: 2,
-      quantity: 100,
-      feature1: 'Vue',
-      feature1Percentage: 70,
-      feature2: 'JavaScript',
-      feature2Percentage: 18,
-      feature3: 'CSS',
-      feature3Percentage: 12,
-      feature4: 'ESLint',
-      feature4Percentage: 100
-    },
-    {
-      product_id: 2,
-      name: '商品2',
-      image: 'https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png',
-      avatar: 'https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png',
-      description: '一款一样会爆炸的按钮。',
-      category: '技术产品',
-      price: 1500,
-      jhprice: 1,
-      pfprice: 2,
-      quantity: 100,
-      feature1: 'React',
-      feature1Percentage: 80,
-      feature2: 'TypeScript',
-      feature2Percentage: 40,
-      feature3: 'SASS',
-      feature3Percentage: 50,
-      feature4: 'Prettier',
-      feature4Percentage: 90
-    },
-    {
-      product_id: 3,
-      name: '商品3',
-      image: 'https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png',
-      avatar: 'https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png',
-      description: '一款不按也会爆炸的按钮。',
-      category: '技术产品',
-      price: 1500,
-      quantity: 100,
-      jhprice: 1,
-      pfprice: 2,
-      feature1: 'Vue',
-      feature1Percentage: 70,
-      feature2: 'JavaScript',
-      feature2Percentage: 18,
-      feature3: 'CSS',
-      feature3Percentage: 12,
-      feature4: 'ESLint',
-      feature4Percentage: 100
-    },
-    {
-      product_id: 4,
-      name: '商品4',
-      image: 'https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png',
-      avatar: 'https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png',
-      description: '爆炸的按钮。',
-      category: '技术产品',
-      price: 1500,
-      jhprice: 1,
-      pfprice: 2,
-      quantity: 100,
-      feature1: 'React',
-      feature1Percentage: 80,
-      feature2: 'TypeScript',
-      feature2Percentage: 40,
-      feature3: 'SASS',
-      feature3Percentage: 50,
-      feature4: 'Prettier',
-      feature4Percentage: 90
-    },
-    {
-      product_id: 5,
-      name: '商品5',
-      image: 'https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png',
-      avatar: 'https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png',
-      description: '一款打了折的爆炸按钮。',
-      category: '技术产品',
-      price: 500,
-      jhprice: 1,
-      pfprice: 2,
-      quantity: 100,
-      feature1: 'Vue',
-      feature1Percentage: 70,
-      feature2: 'JavaScript',
-      feature2Percentage: 18,
-      feature3: 'CSS',
-      feature3Percentage: 12,
-      feature4: 'ESLint',
-      feature4Percentage: 100
-    },
-    {
-      product_id: 6,
-      name: '商品6',
-      image: 'https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png',
-      avatar: 'https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png',
-      description: '难以捉摸的爆炸按钮。',
-      category: '技术产品',
-      price: 1500,
-      jhprice: 1,
-      pfprice: 2,
-      quantity: 100,
-      feature1: 'React',
-      feature1Percentage: 80,
-      feature2: 'TypeScript',
-      feature2Percentage: 40,
-      feature3: 'SASS',
-      feature3Percentage: 50,
-      feature4: 'Prettier',
-      feature4Percentage: 90
-    }
-  ]
+  productList: []
 }
 
 const getters = {
-  products: state => state.products
+  productList: state => state.productList
 }
 
 // 与后端交互的时候用下面这两个const
@@ -207,11 +207,12 @@ const actions = {
       const response = await axios.get('/good/list', {
         params: {
           pageNum: query.pageNum,
-          pageSize: query.pageSize,
-          category: query.category
+          pageSize: query.pageSize
         }
       })
-      commit('SET_PRODUCT_LIST', response.data)
+      console.log('product response:', response)
+      const products = response.data.data.items // 获取到货物列表
+      commit('SET_PRODUCT_LIST', products)
     } catch (error) {
       console.error('查询货品失败: ', error)
     }
@@ -219,9 +220,9 @@ const actions = {
 }
 
 const mutations = {
-  setProducts(state, products) {
-    state.products = products
-  },
+  // setProducts(state, products) {
+  //   state.products = products
+  // },
   ADD_PRODUCT(state, product) {
     state.productList.push(product)
   },

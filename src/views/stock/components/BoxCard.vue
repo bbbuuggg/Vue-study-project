@@ -1,31 +1,21 @@
 <!--
- * @Author: lsl
- * @Date: 2024-09-23 19:23:04
- * @LastEditors: lsl
- * @LastEditTime: 2024-10-19 13:50:31
- * @Description: 请填写简介
 -->
 <template>
   <el-card class="box-card-component" style="margin-left:8px;">
-    <!-- 动态商品图片 -->
-    <div slot="header" class="box-card-header">
-      <img :src="'https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png'" :alt="product.productName">
-    </div>
     <div style="position:relative;">
-      <!-- <pan-thumb :image="product.avatar" class="panThumb" /> -->
-      <!-- 商品名称 -->
-      <mallki class-name="mallki-text" :text="product.productName" />
-      <!-- 商品描述 -->
+      <!-- 库存id -->
+      <mallki class-name="mallki-text" :text="stock.stock_id" />
+      <!-- 仓库id -->
       <div style="padding-top:35px;" class="progress-item">
-        <span><strong>描述:</strong> {{ product.productDesc }}</span>
+        <span><strong>仓库id:</strong> {{ stock.store_id }}</span>
       </div>
-      <!-- 商品类别 -->
+      <!-- 商品id -->
       <div class="progress-item">
-        <span><strong>类别:</strong> {{ product.categoryId }}</span>
+        <span><strong>商品id:</strong> {{ stock.product_id }}</span>
       </div>
-      <!-- 商品价格 -->
+      <!-- 商品数量 -->
       <div class="progress-item">
-        <span><strong>零售价:</strong> ¥{{ product.wholesalePrice }}</span>
+        <span><strong>商品数量:</strong> {{ stock.product_num }}</span>
       </div>
     </div>
   </el-card>
@@ -36,17 +26,17 @@
 import Mallki from '@/components/TextHoverEffect/Mallki'
 
 export default {
+  // PanThumb,
   components: { Mallki },
   props: {
-    product: {
+    stock: {
       type: Object,
       required: true,
       default: () => ({
-        productName: '',
-        imagePath: '',
-        productDesc: '',
-        categoryId: '',
-        wholesalePrice: 0
+        stock_id: '',
+        store_id: '',
+        product_id: '',
+        product_num: ''
       })
     }
   }
@@ -61,7 +51,7 @@ export default {
 }
 </style>
 <style lang="scss" scoped>
-.product-list {
+.customer-list {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;

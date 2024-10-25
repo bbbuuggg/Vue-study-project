@@ -46,21 +46,6 @@
       </el-tooltip>
 
       <!-- <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button> -->
-
-      <div style="position:relative">
-        <div class="tips">
-          <span>Username : admin</span>
-          <span>Password : any</span>
-        </div>
-        <div class="tips">
-          <span style="margin-right:18px;">Username : editor</span>
-          <span>Password : any</span>
-        </div>
-
-        <el-button class="thirdparty-button" type="primary" @click="showDialog=true">
-          Or connect with
-        </el-button>
-      </div>
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
       <el-button type="text" @click="toggleForm">Don't have an account? Sign up here</el-button>
     </el-form>
@@ -120,11 +105,15 @@
           </span>
         </el-form-item>
       </el-tooltip>
+      <!-- username-->
+      <el-form-item prop="username">
+        <el-input v-model="registerForm.username" placeholder="请输入用户名" />
+      </el-form-item>
       <!-- Sex -->
       <el-form-item prop="sex">
         <el-select v-model="registerForm.sex" placeholder="请选择性别">
-          <el-option label="男" value="male" />
-          <el-option label="女" value="female" />
+          <el-option label="男" value="Male" />
+          <el-option label="女" value="Female" />
         </el-select>
       </el-form-item>
 
@@ -136,8 +125,9 @@
       <!-- User Type -->
       <el-form-item prop="user_type">
         <el-select v-model="registerForm.user_type" placeholder="请选择用户类型">
-          <el-option label="普通用户" value="normal" />
-          <el-option label="管理员" value="admin" />
+          <el-option label="经理" value="clerk" />
+          <el-option label="店长" value="shopowner" />
+          <el-option label="店员" value="manage" />
         </el-select>
       </el-form-item>
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleRegister">Register</el-button>
@@ -156,6 +146,7 @@
 <script>
 import { validAccount } from '@/utils/validate'
 import SocialSign from './components/SocialSignin'
+import qs from 'qs'
 
 export default {
   name: 'Login',
@@ -194,13 +185,14 @@ export default {
         account: '',
         password: '',
         confirmPassword: '',
+        username: '',
         sex: '',
         user_phone: '',
         user_type: ''
       },
       loginForm: {
-        account: 'admin',
-        password: '111111'
+        account: '',
+        password: ''
       },
       loginRules: {
         account: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -272,7 +264,8 @@ export default {
         this.$message.error('两次输入的密码不一致')
         return
       }
-
+      // 对象结构，不要确认密码
+      const { confirmPassword, ...dataToSend } = this.registerForm
       // 密码一致，执行表单验证
       this.$refs.registerForm.validate(valid => {
         if (valid) {
@@ -283,57 +276,84 @@ export default {
             role: 'editor'
           }
 
-          // 将用户信息存储到 localStorage
-          localStorage.setItem('user', JSON.stringify(user))
-          this.$message.success('注册成功，您现在可以登录')
-          // 跳转到登录页面
-          this.isLogin = true
+          // // 将用户信息存储到 localStorage
+          // localStorage.setItem('user', JSON.stringify(user))
+          // this.$message.success('注册成功，您现在可以登录')
+          // // 跳转到登录页面
+          // this.isLogin = true
+
           // 以下是和后端交互的部分
-          // this.$axios.post('/user/register', this.registerForm)
-          //   .then(response => {
-          //     this.$message.success('注册成功')
-          //     this.isLogin = true // 注册成功后切换回登录页面
-          //   })
-          //   .catch(error => {
-          //     this.$message.error('注册失败: ' + error)
-          //   })
+          this.$axios.post('/user/register', qs.stringify(dataToSend))
+            .then(response => {
+              console.log('registerCode:', response)
+              this.$message.success('注册成功')
+              this.isLogin = true // 注册成功后切换回登录页面
+            })
+            .catch(error => {
+              this.$message.error('注册失败: ' + error)
+            })
         }
       })
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         // 用户登陆和验证逻辑
-        // console.log('Login button clicked')
-        // if (valid) {
-        //   this.$axios.post('/user/login', this.loginForm)
-        //     .then(response => {
-        //       // 保存后端返回的信息
-        //       const { token, user } = response.data
-        //       // 存储token和用户信息
-        //       this.$store.commit('SET_TOKEN', token)
-        //       this.$store.commit('SET_USER_INFO', user)
-        //       // 跳转到主页或其他指定页面
-        //       this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-        //     })
-        //     .catch(error => {
-        //       // 处理错误,网络错误或者后端状态码表示失败都会报错
-        //       console.error('登陆失败', error)
-        //     })
-        // }
+        console.log('Login button clicked')
         if (valid) {
-          this.loading = true
-          this.$store.dispatch('user/login', this.loginForm)
-            .then(() => {
-              this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-              this.loading = false
+          console.log('loginForm:', qs.stringify(this.loginForm))
+          this.$axios.post('/user/login', qs.stringify(this.loginForm))
+            .then(response => {
+              // 保存后端返回的信息
+              const { code, data } = response.data
+              let type = response.data.data.userType
+              console.log('type', type)
+              if (type === 'administrator') {
+                type = 'admin'
+              } else {
+                type = 'editor'
+              }
+              console.log('Response:', response.data)
+              if (code === 0) {
+              // 保存用户信息
+                this.$store.commit('user/SET_CODE', code)
+                const user = {
+                  userId: data.userId,
+                  userName: data.userName,
+                  userType: [type]
+                }
+                // 存储token和用户信息
+                // this.$store.commit('user/SET_TOKEN', token)
+                this.$store.commit('user/SET_USER_INFO', user)
+                // 根据用户角色生成动态路由
+                this.$store.dispatch('permission/generateRoutes', user.userType).then(() => {
+                  // 动态添加可访问的路由
+                  this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+                })
+                // // 跳转到主页或其他指定页面
+                // this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+                console.log('this.redirect: ', this.redirect)
+              }
             })
-            .catch(() => {
-              this.loading = false
+            .catch(error => {
+              // 处理错误,网络错误或者后端状态码表示失败都会报错
+              console.error('登陆失败', error)
             })
-        } else {
-          console.log('error submit!!')
-          return false
+          console.log('loginForm', this.loginForm)
         }
+        // if (valid) {
+        //   this.loading = true
+        //   this.$store.dispatch('user/login', this.loginForm)
+        //     .then(() => {
+        //       this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+        //       this.loading = false
+        //     })
+        //     .catch(() => {
+        //       this.loading = false
+        //     })
+        // } else {
+        //   console.log('error submit!!')
+        //   return false
+        // }
       })
     },
     getOtherQuery(query) {

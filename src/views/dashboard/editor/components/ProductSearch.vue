@@ -2,7 +2,7 @@
  * @Author: lsl
  * @Date: 2024-09-23 19:18:23
  * @LastEditors: lsl
- * @LastEditTime: 2024-09-23 19:18:36
+ * @LastEditTime: 2024-10-19 15:32:09
  * @Description: 请填写简介
 -->
 <template>
@@ -11,9 +11,9 @@
     <el-button @click="handleSearch">查询</el-button>
 
     <el-table :data="filteredProducts" style="width: 100%">
-      <el-table-column prop="name" label="货品名称" width="180"></el-table-column>
-      <el-table-column prop="price" label="价格" width="180"></el-table-column>
-      <el-table-column prop="quantity" label="数量" width="180"></el-table-column>
+      <el-table-column prop="productName" label="货品名称" width="180"></el-table-column>
+      <el-table-column prop="wholesalePrice" label="价格" width="180"></el-table-column>
+      <el-table-column prop="productDesc" label="描述" width="180"></el-table-column>
     </el-table>
   </div>
 </template>
@@ -27,16 +27,18 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({
-      products: 'product/products' // 从Vuex中获取商品信息
+    ...mapGetters('product', {
+      products: 'productList' // 从product模块获取products数据
     }),
     filteredProducts() {
-      return this.products.filter(product => product.name.includes(this.searchQuery))
+      return this.products.filter(product => product.productName.includes(this.searchQuery))
     }
   },
   methods: {
     handleSearch() {
-      // 可根据需要在此处增加搜索逻辑
+      // 在这里可以添加其他搜索逻辑
+      console.log('Searching for:', this.searchQuery)
+      console.log('Filtered Products:', this.filteredProducts) // 打印匹配的产品
     }
   }
 }

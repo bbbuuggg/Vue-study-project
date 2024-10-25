@@ -1,3 +1,10 @@
+/*
+ * @Author: lsl
+ * @Date: 2024-10-17 19:22:04
+ * @LastEditors: lsl
+ * @LastEditTime: 2024-10-19 17:53:30
+ * @Description: 请填写简介
+ */
 import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
@@ -5,7 +12,10 @@ import { getToken } from '@/utils/auth'
 
 // create an axios instance
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
+  baseURL: 'http://127.0.0.1:8080',
+  // baseURL: 'http://10.250.88.173:8080/',
+  // baseURL: process.env.VUE_APP_BASE_API, //url = base url + request url
+  // baseURL: 'http://localhost:8080/',
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout
 })

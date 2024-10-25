@@ -1,3 +1,10 @@
+<!--
+ * @Author: lsl
+ * @Date: 2024-10-17 19:22:04
+ * @LastEditors: lsl
+ * @LastEditTime: 2024-10-18 18:52:02
+ * @Description: 请填写简介
+-->
 <template>
   <div class="app-container">
     <div v-if="user">
@@ -61,6 +68,7 @@ export default {
   },
   methods: {
     getUser() {
+      console.log('this.roles: ', this.roles)
       this.user = {
         name: this.name,
         role: this.roles.join(' | '),

@@ -10,17 +10,19 @@ NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
 const whiteList = ['/login', '/auth-redirect'] // no redirect whitelist
 
-router.beforeEach(async(to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   // start progress bar
   NProgress.start()
 
   // set page title
   document.title = getPageTitle(to.meta.title)
 
-  // determine whether the user has logged in
-  const hasToken = getToken()
-
-  if (hasToken) {
+  // 获取后端返回的登录状态
+  const loginStatus = store.getters.code // 用code代替token判断是否登陆
+  // // determine whether the user has logged in
+  // const hasToken = getToken()
+  console.log('loginStatus', loginStatus)
+  if (loginStatus === 0) {
     if (to.path === '/login') {
       // if is logged in, redirect to the home page
       next({ path: '/' })
@@ -28,6 +30,7 @@ router.beforeEach(async(to, from, next) => {
     } else {
       // determine whether the user has obtained his permission roles through getInfo
       const hasRoles = store.getters.roles && store.getters.roles.length > 0
+      console.log('loginStatus roles', store.getters.roles)
       if (hasRoles) {
         next()
       } else {

@@ -1,31 +1,31 @@
 <!--
  * @Author: lsl
- * @Date: 2024-09-23 19:23:04
+ * @Date: 2024-10-17 19:22:04
  * @LastEditors: lsl
- * @LastEditTime: 2024-10-19 13:50:31
+ * @LastEditTime: 2024-10-18 00:34:48
  * @Description: 请填写简介
 -->
 <template>
   <el-card class="box-card-component" style="margin-left:8px;">
-    <!-- 动态商品图片 -->
-    <div slot="header" class="box-card-header">
-      <img :src="'https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png'" :alt="product.productName">
-    </div>
     <div style="position:relative;">
-      <!-- <pan-thumb :image="product.avatar" class="panThumb" /> -->
-      <!-- 商品名称 -->
-      <mallki class-name="mallki-text" :text="product.productName" />
-      <!-- 商品描述 -->
+      
+      <!-- 销售单id -->
+      <mallki class-name="mallki-text" :text="sale.slip_id" />
+      <!-- 客户id -->
       <div style="padding-top:35px;" class="progress-item">
-        <span><strong>描述:</strong> {{ product.productDesc }}</span>
+        <span><strong>客户id:</strong> {{ sale.customer_id }}</span>
       </div>
-      <!-- 商品类别 -->
+      <!-- 仓库id -->
       <div class="progress-item">
-        <span><strong>类别:</strong> {{ product.categoryId }}</span>
+        <span><strong>仓库id:</strong> {{ sale.store_id }}</span>
       </div>
-      <!-- 商品价格 -->
+      <!-- 用户id -->
       <div class="progress-item">
-        <span><strong>零售价:</strong> ¥{{ product.wholesalePrice }}</span>
+        <span><strong>用户id:</strong> {{ sale.user_id }}</span>
+      </div>
+      <!-- 销售单状态 -->
+      <div class="progress-item">
+        <span><strong>销售单状态:</strong> {{ sale.state }}</span>
       </div>
     </div>
   </el-card>
@@ -36,17 +36,18 @@
 import Mallki from '@/components/TextHoverEffect/Mallki'
 
 export default {
+  // PanThumb,
   components: { Mallki },
   props: {
-    product: {
+    sale: {
       type: Object,
       required: true,
       default: () => ({
-        productName: '',
-        imagePath: '',
-        productDesc: '',
-        categoryId: '',
-        wholesalePrice: 0
+        slip_id: '',
+        customer_id: '',
+        store_id: '',
+        user_id: '',
+        state: ''
       })
     }
   }
@@ -61,7 +62,7 @@ export default {
 }
 </style>
 <style lang="scss" scoped>
-.product-list {
+.sale-list {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;

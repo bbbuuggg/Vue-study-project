@@ -9,6 +9,10 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import getters from './getters'
 import product from './modules/product'
+//
+import customer from './modules/customer'
+import stock from './modules/stock'
+import sale from './modules/sale'
 
 // 注册Vuex插件
 Vue.use(Vuex)
@@ -29,7 +33,10 @@ const modules = modulesFiles.keys().reduce((modules, modulePath) => {
 const store = new Vuex.Store({
   modules,
   getters,
-  product
+  product,
+  customer,
+  stock,
+  sale
 })
 
 export default store

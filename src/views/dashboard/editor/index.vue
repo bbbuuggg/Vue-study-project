@@ -1,44 +1,10 @@
-<!-- <template>
-  <div class="dashboard-editor-container">
-    <div class=" clearfix">
-      <pan-thumb :image="avatar" style="float: left">
-        Your roles:
-        <span v-for="item in roles" :key="item" class="pan-info-roles">{{ item }}</span>
-      </pan-thumb>
-      <github-corner style="position: absolute; top: 0px; border: 0; right: 0;" />
-      <div class="info-container">
-        <span class="display_name">{{ name }}</span>
-        <span style="font-size:20px;padding-top:20px;display:inline-block;">Editor's Dashboard</span>
-      </div>
-    </div>
-    <div>
-      <img :src="emptyGif" class="emptyGif">
-    </div>
-  </div>
-</template>
-
-<script>
-import { mapGetters } from 'vuex'
-import PanThumb from '@/components/PanThumb'
-import GithubCorner from '@/components/GithubCorner'
-
-export default {
-  name: 'DashboardEditor',
-  components: { PanThumb, GithubCorner },
-  data() {
-    return {
-      emptyGif: 'https://wpimg.wallstcn.com/0e03b7da-db9e-4819-ba10-9016ddfdaed3'
-    }
-  },
-  computed: {
-    ...mapGetters([
-      'name',
-      'avatar',
-      'roles'
-    ])
-  }
-}
-</script> -->
+<!--
+ * @Author: lsl
+ * @Date: 2024-10-17 19:22:04
+ * @LastEditors: lsl
+ * @LastEditTime: 2024-10-19 15:25:11
+ * @Description: 请填写简介
+-->
 <template>
   <div class="dashboard-editor-container">
     <h2>商品展示</h2>
@@ -46,7 +12,7 @@ export default {
       <box-card v-for="product in products" :key="product.id" :product="product" />
     </div>
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-      <product-search />
+      <product-search :products="products" /> <!-- 传递产品列表 -->
     </el-row>
   </div>
 </template>
@@ -65,14 +31,30 @@ export default {
     BoxCard
   },
   computed: {
-    ...mapGetters({
-      products: 'product/products' // 从product模块获取products数据
+    ...mapGetters('product', {
+      products: 'productList' // 从product模块获取products数据
     })
   },
   created() {
-    this.$store.dispatch('product/fetchProducts') // 确保在创建时获取数据
-    if (!this.roles.includes('admin')) {
+    console.log('editor roles', this.roles)
+    console.log('this.store.roles', this.$store.state.user.roles)
+    console.log('editorIndex product', this.$store.state.product)
+    // this.$store.dispatch('product/fetchProducts') // 确保在创建时获取数据
+    this.$store.dispatch('product/getProductList', {
+      pageNum: 1, // 第1页
+      pageSize: 100 // 每页显示10条数据
+    })
+    if (!this.$store.state.user.roles.includes('admin')) {
       this.currentRole = 'editorDashboard'
+    }
+  },
+  methods: {
+    fetchProducts() {
+      // 这里可以根据需要修改分页参数
+      this.$store.dispatch('product/getProductList', {
+        pageNum: 1, // 第1页
+        pageSize: 100 // 每页显示100条数据
+      })
     }
   }
 }

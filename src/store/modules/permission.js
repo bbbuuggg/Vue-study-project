@@ -50,11 +50,14 @@ const actions = {
   generateRoutes({ commit }, roles) {
     return new Promise(resolve => {
       let accessedRoutes
+      console.log('generateRoutes.roles', roles)
       if (roles.includes('admin')) {
         accessedRoutes = asyncRoutes || []
       } else {
         accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
+        console.log('generateRoutes roles2', roles)
       }
+      // accessedRoutes = asyncRoutes || []
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)
     })

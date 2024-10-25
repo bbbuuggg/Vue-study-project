@@ -10,19 +10,25 @@
       <!-- <el-input v-model="searchCategory" placeholder="请输入类别" @change="searchProducts" /> -->
     </div>
     <div class="product-list">
-      <box-card v-for="product in products" :key="product.product_id" :product="product" @click.native="editProduct(product)" />
+      <box-card v-for="product in products" :key="product.id" :product="product" @click.native="editProduct(product)" />
     </div>
     <!-- 管理员端修改商品信息（直接修改的product.js中的信息） -->
     <el-dialog :visible.sync="dialogVisible" title="编辑商品信息">
       <el-form :model="editableProduct">
         <el-form-item label="商品名称">
-          <el-input v-model="editableProduct.name" />
+          <el-input v-model="editableProduct.productName" />
         </el-form-item>
-        <el-form-item label="类别">
-          <el-input v-model="editableProduct.category" />
+        <el-form-item label="类别id">
+          <el-input v-model.number="editableProduct.category" type="number" />
         </el-form-item>
-        <el-form-item label="价格">
-          <el-input v-model="editableProduct.price" type="number" />
+        <el-form-item label="进货价格">
+          <el-input v-model="editableProduct.purchase_price" type="number" />
+        </el-form-item>
+        <el-form-item label="零售价格">
+          <el-input v-model="editableProduct.retail_price" type="number" />
+        </el-form-item>
+        <el-form-item label="批发价格">
+          <el-input v-model="editableProduct.wholesale_price" type="number" />
         </el-form-item>
         <el-form-item label="描述">
           <el-input v-model="editableProduct.description" />
@@ -31,29 +37,29 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取消</el-button>
         <el-button type="primary" @click="saveProduct">保存</el-button>
-        <el-button type="danger" @click.stop="confirmDelete(editableProduct.product_id)">删除商品</el-button>
+        <el-button type="danger" @click.stop="confirmDelete(editableProduct.productId)">删除商品</el-button>
       </span>
     </el-dialog>
     <!-- 增加商品弹窗 -->
     <el-dialog :visible.sync="addDialogVisible" title="增加商品">
       <el-form :model="newProduct">
         <el-form-item label="商品名称">
-          <el-input v-model="newProduct.product_name" />
+          <el-input v-model="newProduct.productName" />
         </el-form-item>
         <el-form-item label="商品描述">
-          <el-input v-model="newProduct.product_description" />
+          <el-input v-model="newProduct.productDesc" />
         </el-form-item>
-        <el-form-item label="商品类别">
-          <el-input v-model="newProduct.category" />
+        <el-form-item label="商品类别id">
+          <el-input v-model="newProduct.categoryId" type="number" /> <!-- 假设用户输入类别ID为数字 -->
         </el-form-item>
         <el-form-item label="进货价格">
-          <el-input v-model="newProduct.purchase_price" type="number" />
+          <el-input v-model="newProduct.purchasePrice" type="number" />
         </el-form-item>
         <el-form-item label="零售价格">
-          <el-input v-model="newProduct.retail_price" type="number" />
+          <el-input v-model="newProduct.retailPrice" type="number" />
         </el-form-item>
         <el-form-item label="批发价格">
-          <el-input v-model="newProduct.wholesale_price" type="number" />
+          <el-input v-model="newProduct.wholesalePrice" type="number" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -108,7 +114,7 @@ import LineChart from './components/LineChart'
 // import RaddarChart from './components/RaddarChart'
 // import PieChart from './components/PieChart'
 // import BarChart from './components/BarChart'
-// import TransactionTable from './components/TransactionTable'
+// import TransactionTable from './components/TransactionTable'           products
 // import TodoList from './components/TodoList'
 import BoxCard from './components/BoxCard'
 import { mapGetters } from 'vuex'
@@ -155,29 +161,48 @@ export default {
       dialogVisible: false,
       addDialogVisible: false,
       editableProduct: {
-        product_id: null,
-        name: '',
-        category: '',
-        price: 0,
-        description: ''
+        product_id: null, // 商品 ID
+        productName: '', // 商品名称
+        categoryId: 0, // 商品类别
+        purchase_price: null, // 进货价格
+        retail_price: null, // 零售价格
+        wholesale_price: null, // 批发价格
+        description: '' // 商品描述
       },
       newProduct: {
-        product_name: '',
-        product_description: '',
-        category: '',
-        purchase_price: null,
-        retail_price: '',
-        wholesale_price: ''
+        productName: '',        // 商品名称
+        productDesc: '',       // 商品描述
+        categoryId: null,      // 类别ID
+        purchasePrice: null,   // 进货价格
+        retailPrice: null,     // 零售价格
+        wholesalePrice: null    // 批发价格
       },
       lineChartData: lineChartData.newVisitis
     }
   },
   computed: {
-    ...mapGetters({
-      products: 'product/products' // 从product模块获取products数据
+    ...mapGetters('product', {
+      products: 'productList' // 从product模块获取products数据
+    })
+  },
+  created() {
+    console.log('admin roles', this.roles)
+    console.log('this.store.roles', this.$store.state.user.roles)
+    console.log('editorIndex product', this.$store.state.product)
+    // this.$store.dispatch('product/fetchProducts') // 确保在创建时获取数据
+    this.$store.dispatch('product/getProductList', {
+      pageNum: 1, // 第1页
+      pageSize: 100 // 每页显示10条数据
     })
   },
   methods: {
+    fetchProducts() {
+      // 这里可以根据需要修改分页参数
+      this.$store.dispatch('product/getProductList', {
+        pageNum: 1, // 第1页
+        pageSize: 100 // 每页显示100条数据
+      })
+    },
     // 打开增加商品的弹窗
     openAddProductDialog() {
       this.newProduct = { name: '', category: '', price: 0, description: '' }
@@ -193,38 +218,50 @@ export default {
     editProduct(product) {
     // 深拷贝当前商品信息，以便编辑
       this.editableProduct = { ...product }
+      console.log('editab', this.editableProduct)
       this.dialogVisible = true
     },
     // 保存编辑商品
-    saveProduct() {
-      const index = this.products.findIndex(p => p.product_id === this.editableProduct.product_id)
-      if (index !== -1) {
-        this.products.splice(index, 1, { ...this.editableProduct })
+    async saveProduct() {
+      // const index = this.products.findIndex(p => p.product_id === this.editableProduct.product_id)
+      // if (index !== -1) {
+      //   this.products.splice(index, 1, { ...this.editableProduct })
+      // }
+      // this.dialogVisible = false
+      // 保存编辑商品
+      try {
+        // 构建请求体
+        const modifiedProductData = {
+          productId: this.editableProduct.productId,
+          productName: this.editableProduct.productName,
+          productDesc: this.editableProduct.description,
+          categoryId: this.editableProduct.category,
+          purchasePrice: this.editableProduct.purchase_price,
+          retailPrice: this.editableProduct.retail_price,
+          wholesalePrice: this.editableProduct.wholesale_price
+        };
+        console.log('modifiedProductData', modifiedProductData)
+        // 发送请求到后端
+        const response = await this.$axios.put('/good/update', modifiedProductData);
+        
+        // 更新本地 products 列表
+        const index = this.products.findIndex(p => p.product_id === this.editableProduct.product_id);
+        if (index !== -1) {
+          this.products.splice(index, 1, response.data); // 使用后端返回的最新数据
+        }
+        // 重新获取商品列表
+        this.fetchProducts(); // 重新获取商品列表
+        // 关闭对话框
+        this.dialogVisible = false;
+      } catch (error) {
+        console.error('修改商品失败:', error);
       }
-      this.dialogVisible = false
     },
-    // 与后端交互的时候用下面这个修改货品
-    // async modifyProduct({ commit }, modifiedProductData) {
-    //   try {
-    //     const response = await axios.put('/good/modify', {
-    //       product_id: modifiedProductData.product_id,
-    //       new_produce_name: modifiedProductData.new_produce_name,
-    //       new_product_description: modifiedProductData.new_product_description,
-    //       new_category: modifiedProductData.new_category,
-    //       new_purchase_price: modifiedProductData.new_purchase_price,
-    //       new_retail_price: modifiedProductData.new_retail_price,
-    //       new_wholesale_price: modifiedProductData.new_wholesale_price
-    //     })
-    //     commit('MODIFY_PRODUCT', response.data)
-    //   } catch (error) {
-    //     console.error('修改货品失败: ', error)
-    //   }
-    // },
     // 点击删除按钮，弹出确认对话框
     confirmDelete(productId) {
       console.log('try to delete')
-      console.log('product_id: ', productId)
-      const product = this.products.find(p => p.product_id === productId)
+      console.log('productId: ', productId)
+      const product = this.products.find(p => p.productId === productId)
       this.dialogVisible = false
       this.deleteDialogVisible = true
       if (product) {
@@ -233,30 +270,56 @@ export default {
     },
     // 确认删除商品
     deleteSelectedProduct() {
-      const productId = this.selectedProduct?.product_id
+      const productId = this.selectedProduct?.productId
       if (productId) {
         // 调用后端接口进行删除
         this.$axios.delete(`/good/delete`, { params: { id: productId }})
-          .then(() => {
-            // 删除成功后更新本地 products 列表
-            this.products = this.products.filter(p => p.product_id !== productId)
-            this.deleteDialogVisible = false
-            this.selectedProduct = null
-          })
-          .catch(err => {
-            console.error('删除商品失败:', err)
-          })
-      }
+          .then(response => {
+          console.log('删除商品成功:', response.data); // 打印后端响应
+          // 重新获取商品列表
+          this.fetchProducts(); // 重新获取商品列表
+          // 调用 Vuex 的 action 来更新 products 列表
+          // this.$store.dispatch('product/removeProduct', productId);
+          this.deleteDialogVisible = false; // 关闭删除确认对话框
+          this.selectedProduct = null; // 重置选中的商品
+        })
+        .catch(err => {
+          console.error('删除商品失败:', err); // 打印错误信息
+        });
+        }
     },
     // 增加商品
     async addProduct() {
       try {
-        console.log('增加商品', this.newProduct)
-        const response = await this.$axios.post('/good/add', this.newProduct)
-        this.products.push(response.data) // 更新本地数据
-        this.addDialogVisible = false
+        console.log('增加商品', this.newProduct);
+        
+        // 构建请求体
+        const requestBody = {
+          productName: this.newProduct.productName,
+          productDesc: this.newProduct.productDesc,
+          categoryId: this.newProduct.categoryId, // 确保这个值是一个有效的数字
+          purchasePrice: this.newProduct.purchasePrice,
+          retailPrice: this.newProduct.retailPrice,
+          wholesalePrice: this.newProduct.wholesalePrice
+        };
+
+        // 发送 POST 请求
+        const response = await this.$axios.post('/good/add', requestBody);
+        
+        // 更新本地数据
+        // this.products.push(response.data); // 假设后端返回新添加的商品数据
+        this.fetchProducts(); // 重新获取商品列表
+        this.addDialogVisible = false; // 关闭添加商品的对话框
+        this.newProduct = {             // 重置 newProduct
+          productName: '',
+          productDesc: '',
+          categoryId: null,
+          purchasePrice: null,
+          retailPrice: null,
+          wholesalePrice: null
+        };
       } catch (error) {
-        console.error('增加商品失败', error)
+        console.error('增加商品失败', error); // 打印错误信息
       }
     },
     // 查询商品（按类别）

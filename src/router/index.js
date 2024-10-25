@@ -14,6 +14,7 @@ import componentsRouter from './modules/components'
 import chartsRouter from './modules/charts'
 import tableRouter from './modules/table'
 import nestedRouter from './modules/nested'
+// import { component } from 'vue/types/umd'
 
 /**
  * 配置项
@@ -398,6 +399,55 @@ export const asyncRoutes = [
       {
         path: 'https://github.com/PanJiaChen/vue-element-admin',
         meta: { title: 'External Link', icon: 'link', roles: ['admin'] }
+      }
+    ]
+  },
+
+  // 加入任务模块
+  // 订单
+  {
+    path: '/sale',
+    component: Layout,
+    redirect: '/sale/index',
+    hidden: false,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/sale/index'),
+        name: 'Sale',
+        meta: { title: 'Sale', icon: 'money', roles: ['admin'] }
+      }
+    ]
+  },
+
+  // 客户
+  {
+    path: '/customer',
+    component: Layout,
+    redirect: '/customer/index',
+    hidden: false,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/customer/index'),
+        name: 'Customer',
+        meta: { title: 'Customer', icon: 'peoples', roles: ['admin'] }
+      }
+    ]
+  },
+
+  //库存
+  {
+    path: '/stock',
+    component: Layout,
+    redirect: '/stock/index',
+    hidden: false,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/stock/index'),
+        name: 'Stock',
+        meta: { title: 'Stock', icon: 'list', roles: ['admin'] }
       }
     ]
   },

@@ -9,29 +9,29 @@
   <el-card class="box-card-component" style="margin-left:8px;">
     <!-- 动态商品图片 -->
     <div slot="header" class="box-card-header">
-      <img :src="product.image" :alt="product.name">
+      <img :src="'https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png'" :alt="product.productName">
     </div>
     <div style="position:relative;">
       <!-- <pan-thumb :image="product.avatar" class="panThumb" /> -->
       <!-- 商品名称 -->
-      <mallki class-name="mallki-text" :text="product.name" />
+      <mallki class-name="mallki-text" :text="product.productName" />
       <!-- 商品描述 -->
       <div style="padding-top:35px;" class="progress-item">
-        <span><strong>描述:</strong> {{ product.description }}</span>
+        <span><strong>描述:</strong> {{ product.productDesc }}</span>
       </div>
       <!-- 商品类别 -->
       <div class="progress-item">
-        <span><strong>类别:</strong> {{ product.category }}</span>
+        <span><strong>类别:</strong> {{ product.categoryId }}</span>
       </div>
       <!-- 商品价格 -->
       <div class="progress-item">
-        <span><strong>零售价:</strong> ¥{{ product.price }}</span>
+        <span><strong>零售价:</strong> ¥{{ product.retailPrice }}</span>
       </div>
       <div class="progress-item">
-        <span><strong>批发价:</strong> ¥{{ product.pfprice }}</span>
+        <span><strong>批发价:</strong> ¥{{ product.wholesalePrice }}</span>
       </div>
       <div class="progress-item">
-        <span><strong>进货价:</strong> ¥{{ product.jhprice }}</span>
+        <span><strong>进货价:</strong> ¥{{ product.purchasePrice }}</span>
       </div>
       <!-- <div style="padding-top:35px;" class="progress-item">
         <span>{{ product.feature1 }}</span>
@@ -65,17 +65,13 @@ export default {
       type: Object,
       required: true,
       default: () => ({
-        name: '',
-        image: '',
-        avatar: '',
-        feature1: '',
-        feature1Percentage: 0,
-        feature2: '',
-        feature2Percentage: 0,
-        feature3: '',
-        feature3Percentage: 0,
-        feature4: '',
-        feature4Percentage: 0
+        productName: '',
+        imagePath: '',
+        productDesc: '',
+        categoryId: '',
+        retailPrice,
+        purchasePrice,
+        wholesalePrice: 0
       })
     }
   }

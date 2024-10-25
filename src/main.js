@@ -1,8 +1,8 @@
 /*
  * @Author: hzxOnlineOk
  * @Date: 2024-09-05 19:16:37
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-09-16 21:11:15
+ * @LastEditors: lsl
+ * @LastEditTime: 2024-10-19 14:56:12
  * @Description: 请填写简介
  */
 import Vue from 'vue'
@@ -26,7 +26,12 @@ import './permission' // permission control
 import './utils/error-log' // error log
 
 import * as filters from './filters' // global filters
+import axios from 'axios'
 
+// 全局配置后端接口
+// axios.defaults.baseURL = 'http://10.250.88.173:8080/'
+axios.defaults.baseURL = 'http://127.0.0.1:8080' // 后端接口地址
+Vue.prototype.$axios = axios
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -35,9 +40,10 @@ import * as filters from './filters' // global filters
  * Currently MockJs will be used in the production environment,
  * please remove it before going online ! ! !
  */
+// 与后端交互不用mock
 if (process.env.NODE_ENV === 'production') {
-  const { mockXHR } = require('../mock')
-  mockXHR()
+  // const { mockXHR } = require('../mock')
+  // mockXHR()
 }
 
 Vue.use(Element, {

@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="changePasswordForm" :model="passwordForm" :rules="passwordRules" label-width="120px">
+  <el-form ref="PasswordForm" :model="passwordForm" :rules="passwordRules" label-width="120px">
     <!-- 账号输入框 -->
     <el-form-item label="账号" prop="account">
       <el-input v-model="passwordForm.account" autocomplete="off" />
@@ -26,6 +26,8 @@
 </template>
 
 <script>
+import qs from 'qs'
+
 export default {
   data() {
     return {
@@ -58,26 +60,37 @@ export default {
       }
     },
     handleChangePassword() {
-      this.$refs.changePasswordForm.validate(valid => {
+      // 验证表单
+      this.$refs.PasswordForm.validate(valid => {
         if (valid) {
-          // 模拟 POST 请求，提交数据
-          this.$axios.post('/user/change-password', {
-            account: this.passwordForm.account,
-            password: this.passwordForm.password,
-            new_password: this.passwordForm.new_password
-          }).then(() => {
-            this.$message.success('密码修改成功')
-            // 重置表单
-            this.passwordForm.account = ''
-            this.passwordForm.password = ''
-            this.passwordForm.new_password = ''
-            this.passwordForm.confirmPassword = ''
-          }).catch(error => {
-            this.$message.error('密码修改失败: ' + error.message)
-          })
+          // 取出要发送的数据，剔除 confirmPassword
+          const { confirmPassword, ...dataToSend } = this.passwordForm
+          // 发送 POST 请求以修改密码
+          this.$axios.post('/user/modify', qs.stringify(dataToSend))
+            .then(response => {
+              // 检查后端返回的状态
+              console.log('changePassword response', response)
+              if (response.data.code === 0) {
+                this.$message.success('密码修改成功')
+                // 重置表单
+                this.passwordForm.account = ''
+                this.passwordForm.password = ''
+                this.passwordForm.new_password = ''
+                this.passwordForm.confirmPassword = ''
+              } else {
+                this.$message.error('密码修改失败: ' + response.data.message)
+              }
+            })
+            .catch(error => {
+              // 捕获并处理错误
+              this.$message.error('密码修改失败: ' + (error.response?.data?.message || error.message))
+            })
+        } else {
+          this.$message.error('表单验证失败，请检查输入')
         }
       })
     }
+
     // 与后端交互用这个
     // async handleSubmit() {
     //   try {
